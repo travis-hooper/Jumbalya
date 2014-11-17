@@ -1,0 +1,1 @@
+This should be a simple web application that will encrypt a string with a password.
