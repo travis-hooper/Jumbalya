@@ -25,7 +25,7 @@ module Jumbalya
     for i in 0...nums.length # takes each array element and assigns 2 letter pair for each element
       y = (nums[i].to_i * @counter) + @counter3 + @digested_pass[i%40]
       letters << @@letter_assign_hash[y]
-      counter(@digested_pass[39 - i%40])
+      counter(@digested_pass[39 - i%40], @digested_pass[39 - (i+5)%40])
     end
     encrypt = letters.inject(:+) # converts array to string ['ab','cd'] => 'abcd'
     encrypt
@@ -43,7 +43,7 @@ module Jumbalya
       else
         nums << ('0' + y)
       end
-      counter(@digested_pass[39 - i%40])
+      counter(@digested_pass[39 - i%40], @digested_pass[39 - (i+5)%40])
     end
     nums = nums.inject(:+).split('')
     even = nums[0...nums.length.to_f/2].reverse
@@ -76,9 +76,9 @@ module Jumbalya
     @counter3 = @digested_pass[@counter2 + 9] + @digested_pass[@counter2 + 10] + @digested_pass[@counter2 + 11] + @counter2
   end
 
-  def self.counter(hexnumber)
-    @counter -= 1 
-    @counter2 += 1
+  def self.counter(hexnumber1, hexnumber2)
+    @counter -= hexnumber1 % 2
+    @counter2 += hexnumber2 % 2
     if @counter == 0
       @counter = 6
     end
@@ -86,7 +86,7 @@ module Jumbalya
       @counter2 = 0
       @counter3 += 1
     end
-    if @counter3 == 51 
+    if @counter3 == 21 + hexnumber1 + hexnumber2
       @counter3 = 0
     end
   end
