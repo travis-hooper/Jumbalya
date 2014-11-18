@@ -6,7 +6,7 @@ class Jumbalya::Server < Sinatra::Base
 
   get '/' do
     @password = 'aPassword'
-    @string = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    @string = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     @encrypted = Jumbalya.encrypt(@string, @password)
     @unencrypted = Jumbalya.unencrypt(@encrypted, @password)
     @encrypted = Jumbalya.encrypt(@string, @password)
