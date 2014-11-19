@@ -25,13 +25,13 @@ module Jumbalya
       counter(@digested_pass[39 - i%40], @digested_pass[39 - (i+5)%40])
     end
     letters
-    encrypt = letters.inject(:+) # converts array to string ['ab','cd'] => 'abcd'
+    encrypt = 'aa' + letters.inject(:+) # converts array to string ['ab','cd'] => 'abcd'
     encrypt
   end
 
   def self.unencrypt(string, password)
     set_pass(password)
-    letters = string.scan(/../).map { |x| @@letter_assign_hash.invert[x]}
+    letters = string[2..-1].scan(/../).map { |x| @@letter_assign_hash.invert[x]}
     set_counter
     nums = Array.new
     for i in 0...letters.length

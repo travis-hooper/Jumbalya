@@ -37,10 +37,15 @@ myApp.config(function($routeProvider) {
 
 	.when('/result', {
 		templateUrl : '../angularViews/result.html'
+
+	})
+
+	.when('/about', {
+		templateUrl : '../angularViews/about.html'
 	})
 
 	.otherwise({
-		redirectTo: '/'
+		redirectTo: '/jumbalya'
 	});
 });
 
@@ -89,16 +94,17 @@ myApp.controller('unjumbalyaCtrl', function($scope, sharedVars, $location) {
 	$scope.submit = function () {
 		var re = sharedVars.getRe();
 		var password = $('#password').val();
-		var jText = $('#j-text');
+		var jText = $('#j-text').val();
 
-		var data = {
-			password: password,
-			jText: jText
-		};
 
 		if (password.length > 6 && !re.test(password)) {
 			alert('That\'s not a valid password');
 		} else {
+
+			var data = {
+				password: password,
+				jText: jText
+			};
 
 			$.ajax({
 				url: '/unjumbalya',

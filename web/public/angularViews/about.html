@@ -1,0 +1,31 @@
+<div class="container main" ng-controller="resultCtrl" >
+	<h1>About:</h1>
+	<div class="text-container">
+		<p class="wordwrap">
+			Jumbalya was originally written as a Ruby text scrambling method (no password) that I wrote in a night for 
+			fun. It worked by taking the original input text and assigning a numerical 2 digit code to each character 
+			(e.g. A = 96 and ! = 99), then performing a number of systematic shifts, it converted the input into something 
+			visually similar to what it returns now.
+		</p>
+		<br>
+		<p>
+			As time went on I discovered SHA-1, a cryptographic hash function that irreversibly but consistently converts any 
+			text input into a 40 character hexadecimal number. I decided to implement this into my original design by digesting 
+			a salted password with SHA-1, then use the hexadecimal output to control both the shifts performed for the encryption 
+			method and the shifts on where to grab the next value from the SHA-1 hash value. Long story short, I'm confident that 
+			someone using anything other than brute-force attack, couldn't unencrypt the output. But I'll buy you a cookie if you 
+			can. Lastly, if for some reason I decide to change the encryption method somewhere down the road, I added in some 
+			reverse compatibility by prefixing every output with 'aa'. the original decryption method will recognize the prefix and 
+			work accordingly.
+		</p>
+		<br>
+		<p>
+			With a working method in place, I decided to deploy 'Jumbalya' as a web application on Heroku with a Sinatra back-end 
+			serving it as a single page application with two post routes and AngularJS and Bootstrap to tie the front-end together.
+		</p>
+		<br>
+		<p>
+			Github Repo: <a href="https://github.com/th01/Jumbalya">https://github.com/th01/Jumbalya</a>
+		</p>
+	</div>
+</div>
