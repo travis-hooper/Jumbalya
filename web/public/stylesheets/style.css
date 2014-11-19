@@ -1,0 +1,21 @@
+body {
+	height: 100%;
+	background-color: #A2B2B2;
+}
+
+.container.main {
+	padding: 20px;
+	background-color: #F8F8F8;
+	border-radius: 10px;
+	
+}
+
+.text-container {
+	border-radius: 5px;
+	padding: 10px;
+	background-color: #FFFFFF;
+}
+
+.wordwrap {
+	word-wrap: break-word;
+}

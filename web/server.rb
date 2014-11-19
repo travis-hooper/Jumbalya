@@ -1,17 +1,23 @@
 require_relative '../lib/jumbalya.rb'
 
+require 'digest/sha1'
+require 'json'
 require 'sinatra/base'
 
 class Jumbalya::Server < Sinatra::Base
 
   get '/' do
-    @password = 'aPassword'
-    @string = "This is a string of thext with random stuff in it I guess :)"
-    @encrypted = Jumbalya.encrypt(@string, @password)
-    @unencrypted = Jumbalya.unencrypt(@encrypted, @password)
-    @encrypted = Jumbalya.encrypt(@string, @password)
-    @wrong = Jumbalya.unencrypt(@encrypted, 'wrong')
     erb :home
+  end
+
+  post '/jumbalya' do
+    jumbalya = Jumbalya.encrypt(params[:jText], params[:password])
+    halt 200, jumbalya
+  end
+
+  post '/unjumbalya' do
+    unjumbalya = Jumbalya.unencrypt(params[:jText], params[:password])
+    halt 200, unjumbalya
   end
 
 end
