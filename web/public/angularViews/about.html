@@ -13,7 +13,7 @@
 			text input into a 40 character hexadecimal number. I decided to implement this into my original design by digesting 
 			a salted password with SHA-1, then use the hexadecimal output to control both the shifts performed for the encryption 
 			method and the shifts on where to grab the next value from the SHA-1 hash value. Long story short, I'm confident that 
-			someone using anything other than brute-force attack, couldn't unencrypt the output. But I'll buy you a cookie if you 
+			someone using anything other than brute-force attack, couldn't decrypt the output. But I'll buy you a cookie if you 
 			can. Lastly, if for some reason I decide to change the encryption method somewhere down the road, I added in some 
 			reverse compatibility by prefixing every output with 'aa'. the original decryption method will recognize the prefix and 
 			work accordingly.
