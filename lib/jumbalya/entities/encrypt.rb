@@ -3,7 +3,7 @@ require 'digest/sha1'
 module Jumbalya
 
   def self.encrypt(string, password)
-    eab(string, password)
+    eaa(string, password)
   end
 
   def self.unencrypt(string, password)
