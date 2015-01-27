@@ -1,6 +1,5 @@
 require_relative '../lib/jumbalya.rb'
 
-require 'digest/sha1'
 require 'json'
 require 'sinatra/base'
 
