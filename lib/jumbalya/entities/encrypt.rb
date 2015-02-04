@@ -40,11 +40,11 @@ module Jumbalya
     set_counter_ab
     letters = Array.new
     for i in 0...nums.length # takes each array element and assigns 2 letter pair for each element
-      y = (nums[i].to_i * @counter) + @counter3 + @digested_password[i%128]
+      y = (nums[i].to_i * @counter) + @counter3 + @digested_password[i%128] # y <= 660
+      # nums[i] <= 100, @counter <= 6, 
       letters << @@letter_assign_hash[y]
       counter_ab(@digested_password[127 - i % 128], @digested_password[127 - (i + 5) % 128])
     end
-    letters
     encrypt = 'ab' + letters.inject(:+) # converts array to string ['ab','cd'] => 'abcd'
     encrypt
   end
@@ -148,17 +148,15 @@ module Jumbalya
 
   def self.set_counter_ab
     i = 0
-    if @digested_password[13 + i] <= 11
-      @counter = @digested_password[13 + i]
-    else
-      while @digested_password[13 + i] > 11
+    unless @digested_password[13 + i] <= 6
+      while @digested_password[13 + i] > 6
         i += 1
         if i == 100
-          @counter = 3
           break
         end
       end
     end
+    @counter = @digested_password[13 + i] > 6 ? @digested_password[13 + i] : 3
     @counter2 = @digested_password[@counter + 20] % 4
     @counter3 = @digested_password[@counter2 + 9] + @digested_password[@counter2 + 10] + @digested_password[@counter2 + 11] + @counter2
   end
