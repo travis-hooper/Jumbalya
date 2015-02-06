@@ -5,7 +5,7 @@ module Jumbalya
     include Essentials
 
     def self.encrypt(string, password)
-      digest_password_512(password)
+      digest_password(password)
       nums = string.split('').map {|x| @@num_assign_hash[x] if @@num_assign_hash[x] != nil}.compact.inject(:+).split('') # takes string splits into individual characters and assigns a value from num_assign_hash. removes illegal characters, returns array containing one digit string integers
       nums = nums.unshift(nums.last)
       nums.pop # takes array of string integers, moves last index to front of array, ['1','2','3','4'] => ['4','1','2','3']
@@ -21,15 +21,16 @@ module Jumbalya
       nums = nums.inject(:+).scan(/../) # converts ['4','1','2','3'] => ['41','23']
       set_counter
       letters = Array.new
+      j,k = 0,0
       for i in 0...nums.length # takes each array element and assigns 2 letter pair for each element
-        j = 0
-        y = (nums[i].to_i * @counter) + @counter3 + @digested_password[ (i + j + i * j) % 128 ] # y <= 660
-        # nums[i] <= 100, @counter <= 6, @counter3 <= 51, @digested_password[i%128] <= 16
-        puts "#{nums[i]} <= 100, #{@counter} <= 6, #{@counter3} <= 45, #{@digested_password[ (i + j + i * j) % 128 ]} <= 15"
+        y = nums[i].to_i + 100 * @counter + @counter3 + @digested_password[ (i + j + k + i * j * k) % 128 ] # y <= 660
         letters << @@letter_assign_hash[y]
         counter( set_hexnumber(i,j,0), set_hexnumber(i,j,1) )
         if i % 127 == 0
           j += 1
+          if j % 127 == 0
+            k += 1
+          end
         end
       end
       encrypt = 'ab' + letters.inject(:+) # converts array to string ['ab','cd'] => 'abcd'
@@ -37,17 +38,13 @@ module Jumbalya
     end
 
     def self.unencrypt(string, password)
-      digest_password_512(password)
+      digest_password(password)
       letters = string[2..-1].scan(/../).map { |x| @@letter_assign_hash.invert[x]}
       set_counter
       nums = Array.new
+      j,k = 0,0
       for i in 0...letters.length
-        j = 0
-        if (letters[i] - @counter3 - @digested_password[ (i + j + i * j) % 128 ]) != 0
-          y = ((letters[i] - @counter3 - @digested_password[ (i + j + i * j) % 128 ])/@counter).to_s
-        else
-          y = '00'
-        end
+        y = (letters[i] - (100 * @counter) - @counter3 -  @digested_password[ (i + j + k + i * j * k) % 128 ]).to_s
         if y.length == 2
           nums << y
         else
@@ -56,6 +53,9 @@ module Jumbalya
         counter( set_hexnumber(i,j,0), set_hexnumber(i,j,1) )
         if i % 127 == 0
           j += 1
+          if j % 127 == 0
+            k += 1
+          end
         end 
       end
       nums = nums.inject(:+).split('')
@@ -73,7 +73,7 @@ module Jumbalya
       unencrypt
     end
 
-    def self.digest_password_512(password)
+    def self.digest_password(password)
       @digested_password = Digest::SHA512.hexdigest( password + ENV['SALT'] ).split('').map { |x| @@hexadecimal_to_decimal[x] ? @@hexadecimal_to_decimal[x] : x.to_i  }
     end
 
@@ -87,9 +87,9 @@ module Jumbalya
     def self.set_counter
       i = 0
       @counter = @digested_password[24 + i]
-      while @digested_password[23 + i] > 6
+      while @digested_password[23 + i] > 5
         i += 1
-        if @digested_password[24 + i] <= 6
+        if @digested_password[24 + i] <= 5
           @counter = @digested_password[24 + i]
         elsif i == 100
           @counter = 2
@@ -103,9 +103,9 @@ module Jumbalya
     def self.counter(hexnumber1, hexnumber2)
       i,j = 0,0
       if hexnumber1 < 14
-        @counter = hexnumber1 % 7
+        @counter = hexnumber1 % 6
       else
-        @counter = (hexnumber1 + hexnumber2) % 7
+        @counter = (hexnumber1 + hexnumber2) % 6
       end
       @counter3 = @digested_password[hexnumber1 + hexnumber2] % 5 * 10 + @digested_password[33 + hexnumber1 - hexnumber2] % 6
       while (@digested_password[hexnumber1 + hexnumber2 + i] == 15) || (@digested_password[33 + hexnumber1 - hexnumber2 + j] >= 12 )
