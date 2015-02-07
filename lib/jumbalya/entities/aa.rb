@@ -6,7 +6,7 @@ module Jumbalya
 
     def self.encrypt(string, password)
       digest_password_SHA1(password)
-      nums = string.split('').map {|x| @@num_assign_hash[x] if @@num_assign_hash[x] != nil}.compact.inject(:+).split('') # takes string splits into individual characters and assigns a value from num_assign_hash. removes illegal characters, returns array containing one digit string integers
+      nums = string.split('').map {|x| @@NumAssignHash[x] if @@NumAssignHash[x] != nil}.compact.inject(:+).split('') # takes string splits into individual characters and assigns a value from num_assign_hash. removes illegal characters, returns array containing one digit string integers
       nums = nums.unshift(nums.last)
       nums.pop # takes array of string integers, moves last index to front of array, ['1','2','3','4'] => ['4','1','2','3']
       even, odd = [],[]
@@ -56,12 +56,12 @@ module Jumbalya
       nums << nums[0]
       nums.shift
       nums = nums.inject(:+).scan(/../)
-      unencrypt = nums.map {|x| @@num_assign_hash.invert[x]}.compact.inject(:+)
+      unencrypt = nums.map {|x| @@NumAssignHash.invert[x]}.compact.inject(:+)
       unencrypt
     end
 
   def self.digest_password_SHA1(password)
-    @digested_password = Digest::SHA1.hexdigest( password + '"' + ENV['SALT'] + '"' ).split('').map { |x| @@hexadecimal_to_decimal[x] ? @@hexadecimal_to_decimal[x] : x.to_i  }
+    @digested_password = Digest::SHA1.hexdigest( password + '"' + ENV['SALT'] + '"' ).split('').map { |x| @@HexadecimalToDecimal[x] ? @@HexadecimalToDecimal[x] : x.to_i  }
   end
   
   end

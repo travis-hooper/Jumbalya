@@ -6,7 +6,7 @@ module Jumbalya
 
     def self.encrypt(string, password)
       digest_password(password)
-      nums = string.split('').map {|x| @@num_assign_hash[x] if @@num_assign_hash[x] != nil}.compact.inject(:+).split('') # takes string splits into individual characters and assigns a value from num_assign_hash. removes illegal characters, returns array containing one digit string integers
+      nums = string.split('').map {|x| @@NumAssignHash[x] if @@NumAssignHash[x] != nil}.compact.inject(:+).split('') # takes string splits into individual characters and assigns a value from num_assign_hash. removes illegal characters, returns array containing one digit string integers
       nums = nums.unshift(nums.last)
       nums.pop # takes array of string integers, moves last index to front of array, ['1','2','3','4'] => ['4','1','2','3']
       even, odd = [],[]
@@ -24,7 +24,7 @@ module Jumbalya
       j = 0
       for i in 0...nums.length # takes each array element and assigns 2 letter pair for each element
         y = nums[i].to_i + 100 * @counter + @counter3 + @digested_password[ (i + j + i * j) % 128 ] # y <= 660
-        letters << @@letter_assign_hash[y]
+        letters << @@LetterAssignHash[y]
         counter( set_hexnumber(i,j,0), set_hexnumber(i,j,1) )
         if i % 127 == 0
           j +=1
@@ -37,7 +37,7 @@ module Jumbalya
 
     def self.unencrypt(string, password)
       digest_password(password)
-      letters = string[2..-1].scan(/../).map { |x| @@letter_assign_hash.invert[x]}
+      letters = string[2..-1].scan(/../).map { |x| @@LetterAssignHash.invert[x]}
       set_counter
       nums = Array.new
       j,k = 0,0
@@ -65,12 +65,12 @@ module Jumbalya
       nums << nums[0]
       nums.shift
       nums = nums.inject(:+).scan(/../)
-      unencrypt = nums.map {|x| @@num_assign_hash.invert[x]}.compact.inject(:+)
+      unencrypt = nums.map {|x| @@NumAssignHash.invert[x]}.compact.inject(:+)
       unencrypt
     end
 
     def self.digest_password(password)
-      @digested_password = Digest::SHA512.hexdigest( password + ENV['SALT'] ).split('').map { |x| @@hexadecimal_to_decimal[x] ? @@hexadecimal_to_decimal[x] : x.to_i  }
+      @digested_password = Digest::SHA512.hexdigest( password + ENV['SALT'] ).split('').map { |x| @@HexadecimalToDecimal[x] ? @@HexadecimalToDecimal[x] : x.to_i  }
     end
 
     def self.set_hexnumber( i, j, index)
