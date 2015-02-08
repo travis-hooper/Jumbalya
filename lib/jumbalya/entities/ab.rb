@@ -118,7 +118,6 @@ module Jumbalya
 
     def self.redigest_password(i,j,password)
       digest_password(password + @@LetterAssignHash[ (j + @digested_password[ j % 128 ]) % 661 ] + j.to_s)
-      puts (password + @@LetterAssignHash[ (j + @digested_password[ j % 128 ]) % 661 ] + j.to_s)
     end
 
   end
