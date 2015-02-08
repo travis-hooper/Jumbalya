@@ -126,9 +126,13 @@ myApp.controller('unjumbalyaCtrl', function($scope, sharedVars, $location) {
 	};
 });
 
-myApp.controller('resultCtrl', function($scope, sharedVars) {
-	$scope.method = sharedVars.getData().method;
-	$scope.data = sharedVars.getData().data;
+myApp.controller('resultCtrl', function($scope, sharedVars, $location) {
+	if (typeof sharedVars.getData() === 'undefined') {
+		$location.path( "/jumbalya" );
+	} else {
+		$scope.method = sharedVars.getData().method;
+		$scope.data = sharedVars.getData().data;
+	}
 });
 
 
