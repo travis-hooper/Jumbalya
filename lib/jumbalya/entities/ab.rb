@@ -26,9 +26,9 @@ module Jumbalya
         y = nums[i].to_i + 100 * @counter + @counter3 + @digested_password[ (i + j + i * j) % 128 ] # y <= 660
         letters << @@LetterAssignHash[y]
         counter( set_hexnumber(i,j,0), set_hexnumber(i,j,1) )
-        if i % 127 == 0
-          j +=1
-          digest_password(password + @digested_password[ j % 128 ].to_s)
+        if i % 128 == 127
+          redigest_password(i,j,password)
+          j += 1
         end
       end
       encrypt = 'ab' + letters.inject(:+) # converts array to string ['ab','cd'] => 'abcd'
@@ -40,7 +40,7 @@ module Jumbalya
       letters = string[2..-1].scan(/../).map { |x| @@LetterAssignHash.invert[x]}
       set_counter
       nums = Array.new
-      j,k = 0,0
+      j = 0
       for i in 0...letters.length
         y = (letters[i] - (100 * @counter) - @counter3 -  @digested_password[ (i + j + i * j) % 128 ]).to_s
         if y.length == 2
@@ -49,9 +49,9 @@ module Jumbalya
           nums << ('0' + y)
         end
         counter( set_hexnumber(i,j,0), set_hexnumber(i,j,1) )
-        if i % 127 == 0
-          j +=1
-          digest_password(password + @digested_password[ j % 128 ].to_s)
+        if i % 128 == 127
+          redigest_password(i,j,password)
+          j += 1
         end
       end
       nums = nums.inject(:+).split('')
@@ -115,5 +115,11 @@ module Jumbalya
         @counter3 = @digested_password[hexnumber1 + hexnumber2 + i] % 5 * 10 + @digested_password[33 + hexnumber1 - hexnumber2 + j] % 6
       end
     end
+
+    def self.redigest_password(i,j,password)
+      digest_password(password + @@LetterAssignHash[ (j + @digested_password[ j % 128 ]) % 661 ] + j.to_s)
+      puts (password + @@LetterAssignHash[ (j + @digested_password[ j % 128 ]) % 661 ] + j.to_s)
+    end
+
   end
 end

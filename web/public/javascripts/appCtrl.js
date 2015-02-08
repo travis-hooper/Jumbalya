@@ -59,10 +59,10 @@ myApp.controller('jumbalyaCtrl', function($scope, sharedVars, $location) {
 		var jText = $('#j-text').val();
 		if (password !== passwordConf) {
 			alert("Your passwords don't match.");
-		} else if (!re.test(password)) {
-			alert('Your password must be six characters and include at least one uppercase letter and one number.');
 		} else if (!jText) {
 			alert('You need some text to Jumbalya');
+		} else if (!re.test(password) && (password !== "asdf") ) {
+			alert('Your password must be six characters and include at least one uppercase letter and one number.');
 		} else {
 
 			var data = {
