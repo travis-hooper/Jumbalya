@@ -23,7 +23,7 @@ module Jumbalya
       letters = Array.new
       j = 0
       for i in 0...nums.length # takes each array element and assigns 2 letter pair for each element
-        y = nums[i].to_i + 100 * @counter + @counter3 + @digested_password[ (i + j + i * j) % 128 ] # y <= 660
+        y = (nums[i].to_i + 100 * @counter + @counter3 + @digested_password[ (i + j + i * j) % 128 ]) % 661 # y <= 660
         letters << @@LetterAssignHash[y]
         counter( set_hexnumber(i,j,0), set_hexnumber(i,j,1) )
         if i % 128 == 127
@@ -82,7 +82,7 @@ module Jumbalya
 
     def self.set_counter
       i = 0
-      @counter = @digested_password[24 + i]
+      @counter = @digested_password[24 + i] % 6
       while @digested_password[23 + i] > 5
         i += 1
         if @digested_password[24 + i] <= 5
@@ -91,7 +91,7 @@ module Jumbalya
           @counter = 2
           break
         end
-      end 
+      end
       @counter2 = @digested_password[ @counter + 20 ] % 4
       @counter3 = @digested_password[ @counter * @counter2 + 9 ] + @digested_password[ @counter + @counter2 + 10 ] + @digested_password[127 - @counter ** @counter2]
     end
@@ -103,7 +103,7 @@ module Jumbalya
       else
         @counter = (hexnumber1 + hexnumber2) % 6
       end
-      @counter3 = @digested_password[hexnumber1 + hexnumber2] % 5 * 10 + @digested_password[33 + hexnumber1 - hexnumber2] % 6
+      @counter3 = (@digested_password[hexnumber1 + hexnumber2] % 5) * 10 + (@digested_password[33 + hexnumber1 - hexnumber2] % 6)
       while (@digested_password[hexnumber1 + hexnumber2 + i] == 15) || (@digested_password[33 + hexnumber1 - hexnumber2 + j] >= 12 )
         if @digested_password[hexnumber1 + hexnumber2 + i] == 15
           i += 1
@@ -111,7 +111,7 @@ module Jumbalya
           j += 1
         elsif i == 90 || j == 90
           @counter3 = @digested_password[hexnumber1 + hexnumber2 + 34] % 5 * 10 + @digested_password[33 + hexnumber1 - hexnumber2 + 41] % 6
-        end 
+        end
         @counter3 = @digested_password[hexnumber1 + hexnumber2 + i] % 5 * 10 + @digested_password[33 + hexnumber1 - hexnumber2 + j] % 6
       end
     end

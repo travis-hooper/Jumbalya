@@ -5,4 +5,6 @@ gem 'sinatra'
 group :development, :test do
   gem 'pry'
   gem 'rb-readline'
+  gem 'rerun'
+  gem 'rspec'
 end

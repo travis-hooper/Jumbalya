@@ -1,11 +1,11 @@
 module Jumbalya
 
   def self.encrypt(string, password)
-    begin
+    # begin
       AB.encrypt(string, password)
-    rescue
-      AA.encrypt(string, password)
-    end
+    # rescue
+      # AA.encrypt(string, password)
+    # end
   end
 
   def self.unencrypt(string, password)
