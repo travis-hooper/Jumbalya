@@ -3,7 +3,6 @@ require 'digest/sha1'
 module Jumbalya
   module AB
     include Essentials
-
     def self.encrypt(string, password)
       digest_password(password)
       nums = string.split('').map {|x| @@NumAssignHash[x] if @@NumAssignHash[x] != nil}.compact.inject(:+).split('') # takes string splits into individual characters and assigns a value from num_assign_hash. removes illegal characters, returns array containing one digit string integers
@@ -70,7 +69,7 @@ module Jumbalya
     end
 
     def self.digest_password(password)
-      @digested_password = Digest::SHA512.hexdigest( password + ENV['SALT'] ).split('').map { |x| @@HexadecimalToDecimal[x] ? @@HexadecimalToDecimal[x] : x.to_i  }
+      @digested_password = Digest::SHA512.hexdigest( password + ENV.fetch('SALT') ).split('').map { |x| @@HexadecimalToDecimal[x] ? @@HexadecimalToDecimal[x] : x.to_i  }
     end
 
     def self.set_hexnumber( i, j, index)
