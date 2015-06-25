@@ -10,9 +10,9 @@ class Jumbalya::Server < Sinatra::Base
   end
 
   post '/jumbalya' do
-    password = params[:password]
+    password, body = params[:password], params[:body]
     if password.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/)
-      jumbalya = Jumbalya.encrypt(params[:jText], password)
+      jumbalya = Jumbalya.encrypt(body, password)
       halt 200, jumbalya
     else
       halt 400, 'Password does not meet validation requirements.'
@@ -20,7 +20,7 @@ class Jumbalya::Server < Sinatra::Base
   end
 
   post '/unjumbalya' do
-    unjumbalya = Jumbalya.unencrypt(params[:jText], params[:password])
+    unjumbalya = Jumbalya.unencrypt(params[:body], params[:password])
     halt 200, unjumbalya
   end
 
