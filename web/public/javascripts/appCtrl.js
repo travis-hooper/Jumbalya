@@ -68,10 +68,10 @@ myApp.controller('jumbalyaCtrl', function($scope, sharedVars, $location) {
     var re = sharedVars.getRe();
     var password = $('#password').val();
     var passwordConf = $('#password-conf').val();
-    var jText = $('#j-text').val();
+    var body = $('#j-text').val();
     if (password !== passwordConf) {
       alert("Your passwords don't match.");
-    } else if (!jText) {
+    } else if (!body) {
       alert('You need some text to Jumbalya');
     } else if (!re.test(password)) {
       alert('Your password must be six characters and include at least one uppercase letter and one number.');
@@ -79,7 +79,7 @@ myApp.controller('jumbalyaCtrl', function($scope, sharedVars, $location) {
 
       var data = {
         password: password,
-        jText: jText
+        body: body
       };
 
       $.ajax({
@@ -106,7 +106,7 @@ myApp.controller('unjumbalyaCtrl', function($scope, sharedVars, $location) {
   $scope.submit = function () {
     var re = sharedVars.getRe();
     var password = $('#password').val();
-    var jText = $('#j-text').val();
+    var body = $('#j-text').val();
 
 
     if (!re.test(password)) {
@@ -115,7 +115,7 @@ myApp.controller('unjumbalyaCtrl', function($scope, sharedVars, $location) {
 
       var data = {
         password: password,
-        jText: jText
+        body: body
       };
 
       $.ajax({
@@ -139,9 +139,7 @@ myApp.controller('unjumbalyaCtrl', function($scope, sharedVars, $location) {
 });
 
 myApp.controller('resultCtrl', function($scope, sharedVars, $location) {
-  if (typeof sharedVars.getData() === 'undefined') {
-    $location.path( "/jumbalya" );
-  } else {
+  if (typeof sharedVars.getData() !== 'undefined') {
     $scope.method = sharedVars.getData().method;
     $scope.data = sharedVars.getData().data;
   }
